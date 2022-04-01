@@ -1,0 +1,47 @@
+#currency{
+  position: relative;
+  
+  font-size: 18px;
+  font-weight: 500;
+  
+width: 30px;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+#options{
+  position:  absolute;  
+  width: 114px;
+  
+  padding: 10px 0;
+  margin: 5px 0;
+
+  transform: translateX(-20px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);
+}
+
+.option{
+  display: flex;
+  padding: 10px 20px;
+}
+
+.option:hover{
+  background-color: #fafafa;
+}
+
+#arrow{
+  position: absolute;
+  top:8px;
+  left: 20px;
+  transform: rotate(180deg);
+}
+
+.open-arrow { 
+  transform: rotate(0deg) !important;
+}
