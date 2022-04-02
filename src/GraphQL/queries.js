@@ -16,3 +16,25 @@ export const GET_CURRENCIES = gql`
     }
   }
 `;
+
+export const GET_PRODUCTS = (category) => {
+  return gql`
+      {
+        category(input: {title:"${category}"}) {
+          products{
+            id
+            name
+            inStock
+            gallery
+            prices{
+              currency{
+                symbol
+                label
+              }
+              amount
+            }
+          }
+        }
+      }
+`;
+};

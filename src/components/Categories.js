@@ -5,12 +5,14 @@ import Category from './Category';
 import client from '../GraphQL/client';
 import { GET_CATEGORIES } from '../GraphQL/queries';
 
+import { connect } from 'react-redux';
+
 import '../css/Categories.css';
 
-export default class Categories extends Component {
+class Categories extends Component {
   constructor(props) {
     super(props);
-    this.state = { categories: [], selectedCategory: '' };
+    this.state = { categories: [] };
   }
 
   componentDidMount = () => {
@@ -27,7 +29,14 @@ export default class Categories extends Component {
 
   renderCategories() {
     return this.state.categories.map((c) => {
-      return <Category selected={false} name={c.name} key={c.name} />;
+      const { selectedCategory } = this.props;
+      return (
+        <Category
+          selected={c.name === selectedCategory}
+          name={c.name}
+          key={c.name}
+        />
+      );
     });
   }
 
@@ -35,3 +44,11 @@ export default class Categories extends Component {
     return <div id="categories">{this.renderCategories()}</div>;
   }
 }
+
+const mapStateToProps = ({ category }) => {
+  return {
+    selectedCategory: category,
+  };
+};
+
+export default connect(mapStateToProps)(Categories);

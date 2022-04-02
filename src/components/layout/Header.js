@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import Categories from './Categories';
-import Currency from './Currency';
+import Categories from '../Categories';
+import Currency from '../Currency';
 
-import '../css/Header.css';
+import '../../css/Header.css';
 
 export default class Header extends Component {
   render() {

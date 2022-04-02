@@ -4,14 +4,18 @@ import client from '../GraphQL/client';
 import { GET_CURRENCIES } from '../GraphQL/queries';
 
 import '../css/Currency.css';
+import { connect } from 'react-redux';
 
-export default class Currency extends Component {
+class Currency extends Component {
   constructor(props) {
     super(props);
-    this.state = { currencies: [], selectedCurrency: '', isActive: false };
+
+    this.wrapperRef = React.createRef();
+    this.state = { currencies: [], isActive: false };
   }
 
   componentDidMount = () => {
+    document.addEventListener('mousedown', this.handleClickOutside);
     client
       .query({
         query: GET_CURRENCIES,
@@ -23,15 +27,25 @@ export default class Currency extends Component {
       });
   };
 
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside = (event) => {
+    if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+      if (this.state.isActive) this.setState({ isActive: false });
+    }
+  };
+
   renderCurrencies = () => {
     return this.state.currencies.map((c) => (
       <div
         className="option"
         key={c.label}
         onClick={() => {
+          this.props.changeCurrency(c);
           this.setState({
             isActive: !this.state.isActive,
-            selectedCurrency: c.symbol,
           });
         }}
       >
@@ -41,15 +55,16 @@ export default class Currency extends Component {
   };
 
   render() {
+    const { symbol } = this.props.selectedCurrency;
     return (
-      <div id="currency">
+      <div ref={this.wrapperRef} id="currency">
         <div
           id="selected-currency"
           onClick={() => {
             this.setState({ isActive: !this.state.isActive });
           }}
         >
-          {this.state.selectedCurrency}
+          {symbol}
           <svg
             className={this.state.isActive ? 'open-arrow' : ''}
             id="arrow"
@@ -74,3 +89,15 @@ export default class Currency extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ currency }) => {
+  return { selectedCurrency: currency };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeCurrency: (payload) => dispatch({ type: 'CHANGE_CURRENCY', payload }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Currency);

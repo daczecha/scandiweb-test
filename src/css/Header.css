@@ -11,5 +11,5 @@
 #right_container{
   width: 240px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Header from './components/Header';
+import Header from './components/layout/Header';
+import Main from './components/layout/Main';
 
 export default class App extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Header></Header>
+        <Header />
+        <Main />
       </div>
     );
   }
