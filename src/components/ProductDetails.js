@@ -12,28 +12,41 @@ class ProductDetails extends Component {
     );
   };
 
+  renderAttributes = this.props.product.attributes.map((a) => (
+    <div className="attribute">
+      <p>{a.name}</p>
+      <div className={`${a.type}`}>
+        {a.items.map((i) => {
+          return a.type === 'swatch' ? (
+            <button className="item" style={{ backgroundColor: i.value }}>
+              {' '}
+            </button>
+          ) : (
+            <button className="item">{i.value}</button>
+          );
+        })}
+      </div>
+    </div>
+  ));
   render() {
     const { brand, name, description } = this.props.product;
     const { amount, currency } = this.getPrice();
 
-    console.log(description);
     return (
       <div className="product-details">
         <div className="info">
-          <p>{brand}</p>
-          <p>{name}</p>
+          <p id="brand">{brand}</p>
+          <p id="name">{name}</p>
         </div>
+        <div className="attributes">{this.renderAttributes}</div>
         <div className="price">
           <p>price:</p>
-          <p>
+          <p id="amount">
             {currency.symbol} {amount}
           </p>
         </div>
-        <button className="add-to-cart">Add To Cart</button>
-        <div
-          className="description"
-          dangerouslySetInnerHTML={{ __html: description }}
-        ></div>
+        <button id="add-to-cart">Add To Cart</button>
+        <div dangerouslySetInnerHTML={{ __html: description }}></div>
       </div>
     );
   }

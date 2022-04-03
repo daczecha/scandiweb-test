@@ -55,6 +55,14 @@ export const GET_PRODUCT = (id) => {
             }
             amount
           }
+          attributes{
+            name
+            type
+            items{
+              displayValue
+              value
+            }
+          }
           description
       }
     }
