@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import client from '../../GraphQL/client';
 
-import '../../css/Main.css';
+import '../../css/PLP.css';
 import { GET_PRODUCTS } from '../../GraphQL/queries';
 import ProductList from '../ProductList';
 
-class Main extends Component {
+class PLP extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,4 +54,4 @@ const mapStateToProps = ({ category }) => {
   };
 };
 
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps)(PLP);

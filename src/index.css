@@ -11,6 +11,7 @@
   box-sizing: border-box;
   font-family: 'Raleway', sans-serif;
 
+  text-decoration: none;
   color: var(--c-text)
 }
 
@@ -21,5 +22,5 @@ html,body{
 
 
 body{
-  padding: 0 80px
+  padding: 0 80px;
 }

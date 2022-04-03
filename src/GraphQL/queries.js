@@ -24,6 +24,7 @@ export const GET_PRODUCTS = (category) => {
           products{
             id
             name
+            brand
             inStock
             gallery
             prices{
@@ -36,5 +37,26 @@ export const GET_PRODUCTS = (category) => {
           }
         }
       }
+`;
+};
+
+export const GET_PRODUCT = (id) => {
+  return gql`
+      {
+        product(id:"${id}") {
+          name
+          brand
+          category
+          gallery
+          prices{
+            currency{
+              symbol
+              label
+            }
+            amount
+          }
+          description
+      }
+    }
 `;
 };

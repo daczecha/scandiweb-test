@@ -1,0 +1,5 @@
+.pdp{
+  display: flex;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import '../css/Category.css';
 
@@ -8,12 +9,13 @@ class Category extends Component {
   render() {
     const { changeCategory, name } = this.props;
     return (
-      <div
+      <Link
+        to={'/'}
         onClick={() => changeCategory(name)}
         className={`category ${this.props.selected && 'selected-category'}`}
       >
         {name}
-      </div>
+      </Link>
     );
   }
 }
