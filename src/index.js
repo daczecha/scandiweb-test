@@ -7,16 +7,19 @@ import client from './GraphQL/client';
 
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
+
 import categoryReducer from './reducers/categoryReducer';
+import currencyReducer from './reducers/currencyReducer';
+import cartReducer from './reducers/cartReducer';
 
 import App from './App';
 
 import './index.css';
-import currencyReducer from './reducers/currencyReducer';
 
 const rootReducer = combineReducers({
   category: categoryReducer,
   currency: currencyReducer,
+  cart: cartReducer,
 });
 
 const store = createStore(rootReducer);

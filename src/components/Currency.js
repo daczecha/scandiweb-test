@@ -43,6 +43,7 @@ class Currency extends Component {
         className="option"
         key={c.label}
         onClick={() => {
+          localStorage.setItem('selectedCurrency', JSON.stringify(c));
           this.props.changeCurrency(c);
           this.setState({
             isActive: !this.state.isActive,

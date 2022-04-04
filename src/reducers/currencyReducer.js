@@ -1,4 +1,4 @@
-const initialState = {
+const initialState = JSON.parse(localStorage.getItem('selectedCurrency')) || {
   label: 'USD',
   symbol: '$',
 };
