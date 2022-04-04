@@ -6,37 +6,64 @@ import '../css/ProductDetails.css';
 class ProductDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = { item: { selectedAttributes: {} } };
+    const { product, itemId } = this.props;
+
+    this.state = {
+      item: {
+        selectedAttributes: {},
+        gallery: product.gallery,
+        prices: product.prices,
+        name: product.name,
+        brand: product.brand,
+        id: itemId,
+      },
+    };
   }
 
   componentDidMount = () => {
-    if (this.props.product.attributes.length) {
-      let attr = { ...this.state.item.selectedAttributes };
-      this.props.product.attributes.forEach((element) => {
-        attr[element.name] = '';
-      });
-      this.setState({ item: { selectedAttributes: attr } });
-    } else {
-      this.setState({ item: {} });
-    }
+    const { item } = this.state;
+    const { product } = this.props;
+
+    let attr = { ...item.selectedAttributes };
+
+    product.attributes.forEach((element) => {
+      attr[element.name] = element.items[0].value; //set first value as default
+    });
+
+    this.setState({
+      item: {
+        ...item,
+        selectedAttributes: attr,
+      },
+    });
   };
 
   handleChooseAttribute = (field, value) => {
-    let attr = { ...this.state.item.selectedAttributes };
+    const { item } = this.state;
+
+    let attr = { ...item.selectedAttributes };
     attr[field] = value;
-    this.setState({ item: { selectedAttributes: attr } });
+
+    this.setState({
+      item: {
+        ...item,
+        selectedAttributes: attr,
+      },
+    });
   };
 
   getPrice = () => {
-    const { selectedCurrency } = this.props;
+    const { selectedCurrency, product } = this.props;
 
-    return this.props.product.prices.find(
+    return product.prices.find(
       (price) => price.currency.label === selectedCurrency.label
     );
   };
 
-  renderAttributes = () =>
-    this.props.product.attributes.map((a) => (
+  renderAttributes = () => {
+    const { product } = this.props;
+
+    return product.attributes.map((a) => (
       <div key={a.name} className="attribute">
         <p>{a.name}</p>
         <div className={`${a.type}`}>
@@ -55,15 +82,15 @@ class ProductDetails extends Component {
                 {this.state.item.selectedAttributes[a.name] === i.value && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
+                    className="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    stroke-width="2"
+                    strokeWidth="2"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
@@ -86,10 +113,13 @@ class ProductDetails extends Component {
         </div>
       </div>
     ));
+  };
 
   render() {
-    const { brand, name, description } = this.props.product;
+    const { brand, name, description, attributes } = this.props.product;
     const { amount, currency } = this.getPrice();
+
+    console.log(this.props.cart);
 
     return (
       <div className="product-details">
@@ -97,24 +127,38 @@ class ProductDetails extends Component {
           <p id="brand">{brand}</p>
           <p id="name">{name}</p>
         </div>
-        <div className="attributes">{this.renderAttributes()}</div>
+        {attributes.length ? (
+          <div className="attributes">{this.renderAttributes()}</div>
+        ) : null}
         <div className="price">
           <p>price:</p>
           <p id="amount">
             {currency.symbol} {amount}
           </p>
         </div>
-        <button id="add-to-cart">Add To Cart</button>
+        <button
+          onClick={() => this.props.addItem(this.state.item)}
+          id="add-to-cart"
+        >
+          Add To Cart
+        </button>
         <div dangerouslySetInnerHTML={{ __html: description }}></div>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ currency }) => {
+const mapStateToProps = ({ currency, cart }) => {
   return {
     selectedCurrency: currency,
+    cart,
   };
 };
 
-export default connect(mapStateToProps)(ProductDetails);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addItem: (payload) => dispatch({ type: 'ADD_ITEM', payload }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

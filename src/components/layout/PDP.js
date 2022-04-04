@@ -30,13 +30,13 @@ class PDP extends Component {
   };
 
   render() {
-    const { product } = this.state;
+    const { product, id } = this.state;
     return (
       <>
         {product && (
           <div className="pdp">
             <ProductGallery gallery={product.gallery} />
-            <ProductDetails product={product} />
+            <ProductDetails product={product} itemId={id} />
           </div>
         )}
       </>

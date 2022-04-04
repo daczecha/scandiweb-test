@@ -1,0 +1,29 @@
+#minicart-button{
+  position: relative;
+  margin-left: 22px;
+
+  cursor: pointer;
+}
+
+#item-count{
+  position: absolute;
+  background-color: black;
+  
+  text-align: center;
+
+  color:white;
+  font-weight: 700;
+
+  border-radius: 50%;
+
+  font-size: 14px;
+
+  width: 20px;
+  height: 20px;
+  
+  top:0;
+  right:0;
+
+  transform: translate(40%, -40%);
+
+} 

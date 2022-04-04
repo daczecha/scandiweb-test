@@ -4,6 +4,7 @@ import Categories from '../Categories';
 import Currency from '../Currency';
 
 import '../../css/Header.css';
+import MiniCart from '../MiniCart';
 
 export default class Header extends Component {
   render() {
@@ -59,6 +60,7 @@ export default class Header extends Component {
         </svg>
         <div id="right_container">
           <Currency />
+          <MiniCart />
         </div>
       </div>
     );
