@@ -119,8 +119,6 @@ class ProductDetails extends Component {
     const { brand, name, description, attributes } = this.props.product;
     const { amount, currency } = this.getPrice();
 
-    console.log(this.props.cart);
-
     return (
       <div className="product-details">
         <div className="info">

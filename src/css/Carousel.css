@@ -1,0 +1,36 @@
+.carousel{
+  height: 200px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid lightgray;
+}
+
+.carousel img{
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+.carousel-buttons{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.carousel-buttons button{
+  width: 20px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  transition: 0.1s
+}
+
+
+.carousel-buttons button:hover{
+  transform: scale(1.145);
+}

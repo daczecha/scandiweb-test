@@ -1,0 +1,29 @@
+.quantity{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+.quantity p{
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.change-quantity{
+  border: 1px solid var(--c-text);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  cursor: pointer;
+}
+
+
+.change-quantity:hover{
+  filter:brightness(.96)
+}
