@@ -10,7 +10,10 @@ import ProductDetails from '../ProductDetails';
 class PDP extends Component {
   constructor(props) {
     super(props);
-    this.state = { id: window.location.href.split('/').pop(), product: null };
+    this.state = {
+      id: window.location.href.split('/').pop(),
+      product: null,
+    };
   }
 
   componentDidMount = () => {

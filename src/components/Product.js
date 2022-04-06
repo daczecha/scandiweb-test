@@ -1,20 +1,53 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import '../css/Product.css';
 
-export default class Product extends Component {
-  handleAddToCart = (e) => {
-    alert('cart');
+class Product extends Component {
+  constructor(props) {
+    super(props);
+
+    const { info } = this.props;
+
+    this.state = {
+      item: {
+        selectedAttributes: {},
+        gallery: info.gallery,
+        prices: info.prices,
+        name: info.name,
+        brand: info.brand,
+        inStock: info.inStock,
+        id: info.id,
+      },
+    };
+  }
+
+  componentDidMount = () => {
+    const { item } = this.state;
+    const { info } = this.props;
+
+    let attr = { ...item.selectedAttributes };
+
+    info.attributes.forEach((element) => {
+      attr[element.name] = element.items[0].value; //set first value as default
+    });
+
+    this.setState({
+      item: {
+        ...item,
+        selectedAttributes: attr,
+      },
+    });
   };
 
   render() {
-    const { id, name, brand, gallery, inStock } = this.props.info;
+    const { id, name, brand, gallery, inStock } = this.state.item;
     const { amount, currency } = this.props.price;
 
     return (
       <div className={`product ${inStock ? '' : 'out-of-stock'}`}>
-        <Link to={inStock ? `/product/${id}` : ''} className="card">
+        <Link to={`/product/${id}`} className="card">
           <div className="product-img">
             <img src={gallery[0]} alt={id}></img>
             {inStock ? null : (
@@ -31,7 +64,10 @@ export default class Product extends Component {
           </div>
         </Link>
         {inStock && (
-          <div onClick={this.handleAddToCart} className="add-to-cart">
+          <div
+            className="add-to-cart"
+            onClick={() => this.props.addItem(this.state.item)}
+          >
             <svg
               width="30"
               height="30"
@@ -58,3 +94,11 @@ export default class Product extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addItem: (payload) => dispatch({ type: 'ADD_ITEM', payload }),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Product);

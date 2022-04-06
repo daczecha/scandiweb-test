@@ -34,6 +34,13 @@ export const GET_PRODUCTS = (category) => {
               }
               amount
             }
+            attributes{
+              name
+              type
+              items{
+                value
+              }
+            }
           }
         }
       }
@@ -63,6 +70,7 @@ export const GET_PRODUCT = (id) => {
               value
             }
           }
+          inStock
           description
       }
     }

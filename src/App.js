@@ -6,7 +6,6 @@ import Header from './components/layout/Header';
 import PDP from './components/pages/PDP';
 import PLP from './components/pages/PLP';
 import Cart from './components/pages/Cart';
-import Footer from './components/layout/Footer';
 
 export default class App extends Component {
   constructor(props) {
@@ -23,7 +22,6 @@ export default class App extends Component {
           <Route exact path="/cart" element={<Cart />} />
           <Route path="/product/:id" element={<PDP />} />
         </Routes>
-        <Footer />
       </BrowserRouter>
     );
   }

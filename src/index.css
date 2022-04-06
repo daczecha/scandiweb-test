@@ -23,4 +23,5 @@ html,body{
 
 body{
   padding: 0 80px;
+  position: relative;
 }

@@ -92,3 +92,11 @@
   z-index: 200;
   filter: invert(60%);
 }
+
+
+
+
+.disabled:hover{
+  filter: brightness(1) !important;
+  cursor: not-allowed;
+}

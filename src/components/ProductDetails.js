@@ -15,6 +15,7 @@ class ProductDetails extends Component {
         prices: product.prices,
         name: product.name,
         brand: product.brand,
+        inStock: product.inStock,
         id: itemId,
       },
     };
@@ -63,6 +64,12 @@ class ProductDetails extends Component {
   renderAttributes = () => {
     const { product } = this.props;
 
+    var props = {};
+
+    if (!product.inStock) {
+      props.disabled = true;
+    }
+
     return product.attributes.map((a) => (
       <div key={a.name} className="attribute">
         <p>{a.name}</p>
@@ -76,25 +83,27 @@ class ProductDetails extends Component {
                   this.state.item.selectedAttributes[a.name] === i.value
                     ? 'selected'
                     : ''
-                }`}
+                }  ${!product.inStock && 'disabled'}`}
                 style={{ backgroundColor: i.value }}
+                {...props}
               >
-                {this.state.item.selectedAttributes[a.name] === i.value && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
+                {this.state.item.selectedAttributes[a.name] === i.value &&
+                  product.inStock && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
               </button>
             ) : (
               <button
@@ -104,7 +113,8 @@ class ProductDetails extends Component {
                   this.state.item.selectedAttributes[a.name] === i.value
                     ? 'selected'
                     : ''
-                }`}
+                } ${!product.inStock && 'disabled'}`}
+                {...props}
               >
                 {i.value}
               </button>
@@ -116,7 +126,8 @@ class ProductDetails extends Component {
   };
 
   render() {
-    const { brand, name, description, attributes } = this.props.product;
+    const { brand, name, description, attributes, inStock } =
+      this.props.product;
     const { amount, currency } = this.getPrice();
 
     return (
@@ -134,12 +145,23 @@ class ProductDetails extends Component {
             {currency.symbol} {amount}
           </p>
         </div>
-        <button
-          onClick={() => this.props.addItem(this.state.item)}
-          id="add-to-cart"
-        >
-          Add To Cart
-        </button>
+        {inStock ? (
+          <button
+            onClick={() => this.props.addItem(this.state.item)}
+            id="add-to-cart"
+          >
+            Add To Cart
+          </button>
+        ) : (
+          <button
+            disabled
+            id="add-to-cart"
+            style={{ filter: 'brightness(0.8)', cursor: 'not-allowed' }}
+          >
+            OUT OF STOCK
+          </button>
+        )}
+
         <div dangerouslySetInnerHTML={{ __html: description }}></div>
       </div>
     );
@@ -149,7 +171,6 @@ class ProductDetails extends Component {
 const mapStateToProps = ({ currency, cart }) => {
   return {
     selectedCurrency: currency,
-    cart,
   };
 };
 
