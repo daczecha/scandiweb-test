@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import '../css/MiniCart.css';
+import Quantity from './Quantity';
 
 class MiniCart extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { cartItemsCount: this.props.cartItems.length };
+    this.wrapperRef = React.createRef();
+    this.state = {
+      cartItemsCount: this.props.cartItems.length,
+      isActive: false,
+    };
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -15,9 +21,124 @@ class MiniCart extends Component {
     this.setState({ cartItemsCount: cartItems.length });
   };
 
+  componentDidMount = () => {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside = (event) => {
+    if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+      if (this.state.isActive) this.setState({ isActive: false });
+    }
+  };
+
+  getPrice = (product) => {
+    const { selectedCurrency } = this.props;
+
+    return product.prices.find(
+      (price) => price.currency.label === selectedCurrency.label
+    );
+  };
+
+  calculatePrice = () => {
+    const { cartItems } = this.props;
+
+    let allPrices = [];
+    let symbol = '';
+
+    cartItems.forEach((i) => {
+      const { amount, currency } = this.getPrice(i);
+
+      allPrices.push(Number(amount));
+      symbol = currency.symbol;
+    });
+
+    return `${allPrices
+      .reduce(function (a, b) {
+        return a + b;
+      }, 0)
+      .toFixed(2)} ${symbol}`;
+  };
+
+  renderSelectedAttributes = (item) => {
+    let attributeArray = [];
+
+    for (const attributeName in item.selectedAttributes) {
+      attributeArray.push(
+        <div
+          style={
+            attributeName === 'Color'
+              ? { backgroundColor: item.selectedAttributes[attributeName] }
+              : {}
+          }
+          className={`attribute-cart selected ${
+            attributeName === 'Color' ? 'color' : ''
+          }`}
+        >
+          {attributeName !== 'Color' ? (
+            item.selectedAttributes[attributeName]
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          )}
+        </div>
+      );
+    }
+    return attributeArray;
+  };
+
+  renderCartItems = () => {
+    const { cartItems } = this.props;
+
+    return cartItems.map((i) => {
+      const { amount, currency } = this.getPrice(i);
+      return (
+        <div key={i.id + Math.random()} className="minicart-item">
+          <div className="minicart-item-details">
+            <p id="minicart-item-brand">{i.brand}</p>
+            <p id="minicart-item-name">{i.name}</p>
+            <p id="minicart-item-price">
+              <p id="minicart-item-amount">
+                {currency.symbol}
+                {amount}
+              </p>
+            </p>
+            <div className="minicart-item-attributes">
+              {this.renderSelectedAttributes(i)}
+            </div>
+          </div>
+
+          <div className="right">
+            <Quantity item={i}></Quantity>
+            <img className="minicart-img" alt="ss" src={i.gallery[0]}></img>
+          </div>
+        </div>
+      );
+    });
+  };
+
   render() {
     return (
-      <div id="minicart-button">
+      <div
+        ref={this.wrapperRef}
+        onClick={() => this.setState({ isActive: true })}
+        id="minicart-button"
+      >
         <svg
           width="26"
           height="26"
@@ -39,15 +160,40 @@ class MiniCart extends Component {
           />
         </svg>
         <div id="item-count">{this.state.cartItemsCount}</div>
+        {this.state.isActive && (
+          <div id="minicart-content">
+            <p className="minicart-title">
+              My Bag, <span>{this.state.cartItemsCount} items</span>
+            </p>
+            {this.renderCartItems()}
+            <div id="footer">
+              <Link style={{ flex: 1 }} to="/cart">
+                <button id="view-bag" style={{ width: '100%' }}>
+                  View Bag
+                </button>
+              </Link>
+              <button id="checkout">Checkout</button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ cart }) => {
+const mapStateToProps = ({ cart, currency }) => {
   return {
     cartItems: cart,
+    selectedCurrency: currency,
   };
 };
 
-export default connect(mapStateToProps)(MiniCart);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeCategory: (payload) => dispatch({ type: 'CHANGE_CATEGORY', payload }),
+    removeItem: (payload) => dispatch({ type: 'REMOVE_ITEM', payload }),
+    clearCart: () => dispatch({ type: 'CLEAR_CART' }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MiniCart);
