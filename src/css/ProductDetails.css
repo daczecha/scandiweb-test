@@ -98,5 +98,10 @@
 
 .disabled:hover{
   filter: brightness(1) !important;
-  cursor: not-allowed;
+  cursor: not-allowed !important;
+}
+
+.disabled-button{
+  filter: brightness(0.8) !important;
+  cursor: not-allowed !important;
 }

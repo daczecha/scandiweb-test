@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import '../css/MiniCart.css';
+import BackDrop from './BackDrop';
 import Quantity from './Quantity';
 
 class MiniCart extends Component {
@@ -11,14 +12,15 @@ class MiniCart extends Component {
 
     this.wrapperRef = React.createRef();
     this.state = {
-      cartItemsCount: this.props.cartItems.length,
+      cartItemsCount: this.calculateTotalItems(this.props.cartItems),
       isActive: false,
     };
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { cartItems } = nextProps;
-    this.setState({ cartItemsCount: cartItems.length });
+    this.setState({
+      cartItemsCount: this.calculateTotalItems(nextProps.cartItems),
+    });
   };
 
   componentDidMount = () => {
@@ -43,7 +45,7 @@ class MiniCart extends Component {
     );
   };
 
-  calculatePrice = () => {
+  calculateTotalPrice = () => {
     const { cartItems } = this.props;
 
     let allPrices = [];
@@ -51,8 +53,7 @@ class MiniCart extends Component {
 
     cartItems.forEach((i) => {
       const { amount, currency } = this.getPrice(i);
-
-      allPrices.push(Number(amount));
+      allPrices.push(Number(amount * i.quantity));
       symbol = currency.symbol;
     });
 
@@ -63,39 +64,50 @@ class MiniCart extends Component {
       .toFixed(2)} ${symbol}`;
   };
 
+  calculateTotalItems = (cartItems) => {
+    const quantityArray = cartItems.map((i) => i.quantity);
+
+    return quantityArray.reduce(function (a, b) {
+      return a + b;
+    }, 0);
+  };
+
   renderSelectedAttributes = (item) => {
     let attributeArray = [];
 
     for (const attributeName in item.selectedAttributes) {
       attributeArray.push(
-        <div
-          style={
-            attributeName === 'Color'
-              ? { backgroundColor: item.selectedAttributes[attributeName] }
-              : {}
-          }
-          className={`attribute-cart selected ${
-            attributeName === 'Color' ? 'color' : ''
-          }`}
-        >
-          {attributeName !== 'Color' ? (
-            item.selectedAttributes[attributeName]
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          )}
+        <div className="attr">
+          <p>{attributeName}:</p>
+          <div
+            style={
+              attributeName === 'Color'
+                ? { backgroundColor: item.selectedAttributes[attributeName] }
+                : {}
+            }
+            className={`attribute-cart selected ${
+              attributeName === 'Color' ? 'color' : ''
+            }`}
+          >
+            {attributeName !== 'Color' ? (
+              item.selectedAttributes[attributeName]
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
+          </div>
         </div>
       );
     }
@@ -161,20 +173,32 @@ class MiniCart extends Component {
         </svg>
         <div id="item-count">{this.state.cartItemsCount}</div>
         {this.state.isActive && (
-          <div id="minicart-content">
-            <p className="minicart-title">
-              My Bag, <span>{this.state.cartItemsCount} items</span>
-            </p>
-            {this.renderCartItems()}
-            <div id="footer">
-              <Link style={{ flex: 1 }} to="/cart">
-                <button id="view-bag" style={{ width: '100%' }}>
-                  View Bag
-                </button>
-              </Link>
-              <button id="checkout">Checkout</button>
+          <>
+            <div id="minicart-content">
+              <p className="minicart-title">
+                My Bag, <span>{this.state.cartItemsCount} items</span>
+              </p>
+              {this.renderCartItems()}
+              <div id="footer">
+                <div className="total">
+                  Total <span>{this.calculateTotalPrice()}</span>
+                </div>
+                <div
+                  className="buttons"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    this.setState({ isActive: false });
+                  }}
+                >
+                  <Link id="view-bag-link" to="/cart">
+                    <button id="view-bag">View Bag</button>
+                  </Link>
+                  <button id="checkout">Checkout</button>
+                </div>
+              </div>
             </div>
-          </div>
+            <BackDrop></BackDrop>
+          </>
         )}
       </div>
     );

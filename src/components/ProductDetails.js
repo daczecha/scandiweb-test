@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import DOMPurify from 'dompurify';
+
 import '../css/ProductDetails.css';
 
 class ProductDetails extends Component {
@@ -153,16 +155,14 @@ class ProductDetails extends Component {
             Add To Cart
           </button>
         ) : (
-          <button
-            disabled
-            id="add-to-cart"
-            style={{ filter: 'brightness(0.8)', cursor: 'not-allowed' }}
-          >
+          <button disabled id="add-to-cart" className="disabled-button">
             OUT OF STOCK
           </button>
         )}
 
-        <div dangerouslySetInnerHTML={{ __html: description }}></div>
+        <div
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
+        ></div>
       </div>
     );
   }

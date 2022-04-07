@@ -21,14 +21,14 @@ class Quantity extends Component {
             <path
               d="M22.5 15V30"
               stroke="#1D1F22"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M15 22.5H30"
               stroke="#1D1F22"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
@@ -47,8 +47,8 @@ class Quantity extends Component {
             <path
               d="M1 0.5H16"
               stroke="#1D1F22"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
